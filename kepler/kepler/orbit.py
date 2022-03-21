@@ -1,25 +1,23 @@
-""" Numerical values """
-Mo_ = 1.989e30
-GeV_ = 1.79e-27 * (3e8) ** 2
+import argparse
+
+import numpy as np
+from display import start_msg
+from functions_wrappers import mass_conversion
+
+""" Passing arguments """
+parser = argparse.ArgumentParser()
+parser.add_argument("--M", default=1, type=float)
+parser.add_argument("--mx", type=float)
+
+args = parser.parse_args()
+
 
 """ Constants initialization """
 
-Mo = 1  # Mo
-Mx = 0.05  # Mo
-G = 3  # Mo... #TODO: fix the unit and number (finalize the units)
+M, mx = args.M, mass_conversion(args.mx, solar2GeV=False)
+G = 4 * np.pi  # AU^3 Mo^-1 yr^-2
 
-
-""" Unit Conversion """
-
-
-def mass_conversion(m, solar2GeV=True):
-
-    m = float(m)
-
-    return (m * Mo_) / (GeV_) if solar2GeV else (m * GeV_) / Mo_
-
-
-""" Exact trajectory tracking """
+""" Trajectory tracking """
 
 
 def g_potential(
@@ -35,5 +33,4 @@ def g_potential(
 
 
 """ Execute """
-
-print(mass_conversion(0.1, False))
+start_msg(M, args.mx)
