@@ -1,5 +1,5 @@
-from loguru import logger
 import matplotlib.pyplot as plt
+from loguru import logger
 
 
 def start_msg(M, mx, T, h):
@@ -12,11 +12,15 @@ def start_msg(M, mx, T, h):
         + f"Total time of simulation is {T:.3} of width {h:.5}"
     )
 
-def plot(r):
+
+def plot(r, alpha):
 
     fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection="3d")
 
-    ax.scatter(r[:,0], r[:,1], r[:,2], marker='o')
+    ax.scatter(r[:, 0], r[:, 1], r[:, 2], marker="o")
 
+    plt.title(rf"$\alpha = ${alpha:.2}")
+    plt.savefig(f"record/alpha={alpha}.png")
     plt.show()
+    plt.close

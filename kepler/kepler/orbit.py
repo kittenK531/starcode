@@ -1,8 +1,7 @@
 import argparse
 
 import numpy as np
-from pandas import array
-from display import start_msg, plot
+from display import plot, start_msg
 from functions_wrappers import mass_conversion
 
 """ Passing arguments """
@@ -23,6 +22,7 @@ N = int(args.T / args.h)
 
 """ Trajectory tracking """
 
+
 def g_potential(
     m1, m2, r_rel
 ):  # TODO: 1) consider volume elements of sun mass accounted version 2) input r array??
@@ -34,9 +34,8 @@ def g_potential(
 
     return -1 * G * m1 * m2 / r_rel
 
-def g_acc_theo(
-    m1, r_1, r_2
-):
+
+def g_acc_theo(m1, r_1, r_2):
 
     """get gravitational potential value
     Inputs: m1, m2      (scalar)
@@ -47,11 +46,11 @@ def g_acc_theo(
     r_rel = r_1 - r_2
     rrel = np.linalg.norm(r_rel)
 
-    
-    return -1 * G * m1 / rrel ** 3/2 * r_rel
+    return -1 * G * m1 / rrel ** 3 / 2 * r_rel
     # return -3 * G * m1 / (rrel * rrel) * r_rel #, r_rel
 
-def evolve(r_0, v_0, N=N):
+
+def evolve(r_0, v_0, alpha, N=N):
 
     """get array of x evolution aroound the rest frame of star
     Inputs: r_0, v_0    (array)
@@ -60,24 +59,23 @@ def evolve(r_0, v_0, N=N):
 
     # Initialization #
     r_star = np.zeros(3)
-    r, v, a = np.zeros((N, 3)), np.zeros((N,3)), np.zeros((N,3))
+    r, v, a = np.zeros((N, 3)), np.zeros((N, 3)), np.zeros((N, 3))
 
-    r[0], v[0] = r_0, v_0
+    r[0], v[0] = r_0, alpha * v_0
     a[0] = g_acc_theo(M, r[0], r_star)
 
-    for i in range(N-1):
-        
-        r[i+1] = r[i] + v[i] * args.h + 0.5 * a[i] * (args.h * args.h) / 2
-        v[i+1] = v[i] + a[i] * args.h / 2
-        a[i+1] = g_acc_theo(M, r[i+1], r_star)
-        v[i+1] = v[i+1] + a[i+1] * args.h / 2
+    for i in range(N - 1):
+
+        r[i + 1] = r[i] + v[i] * args.h + 0.5 * a[i] * (args.h * args.h) / 2
+        v[i + 1] = v[i] + a[i] * args.h / 2
+        a[i + 1] = g_acc_theo(M, r[i + 1], r_star)
+        v[i + 1] = v[i + 1] + a[i + 1] * args.h / 2
 
     return r
 
 
-
 """ Execute """
-start_msg(M, args.mx, args.T, args.h)
-r = evolve(np.array([1, 0, 0]), np.array([0, 2 * np.pi, 0]))
-plot(r)
-
+for alpha in [0.8, 0.9, 1.0, 1.05]:
+    start_msg(M, args.mx, args.T, args.h)
+    r = evolve(np.array([1, 0, 0]), np.array([0, 2 * np.pi, 0]), alpha)
+    plot(r, alpha)
