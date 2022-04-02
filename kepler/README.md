@@ -8,7 +8,7 @@ It is suggested that an isolated virtual environment is created under execution
 ```
 conda create -n starcode python==3.8
 conda activate starcode
-pip install loguru (autoflake black isort)
+pip install tqdm loguru (autoflake black isort)
 ```
 The packages bracketed are optional for collaboration purposes (pre-commit reformatting).
 
@@ -41,4 +41,4 @@ Since the range of dark matter particle mass is of range 10^-3 to 10^19, the ord
 2. Energy drift (sympletic): swifter
 3. Ambient dark matter capture change of mass: cross section * lifetime * pi R ^2 
 
-## TODO: Monte Carlo + logic
+## TODO: Monte Carlo + logic + package
