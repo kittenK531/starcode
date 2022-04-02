@@ -20,3 +20,10 @@ def GeV2solar(m):
     print(f"{m:.3}GeV --> {m_S:.3}Mo")
 
     return m_S
+
+
+def print_dist(r_rel):
+
+    import numpy as np
+
+    print(np.linalg.norm(r_rel))

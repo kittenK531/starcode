@@ -1,6 +1,8 @@
 # Kepler's orbit simulation documentation
 This package simulates particle keplerian orbits around massive star with given initial velocity and position.
 
+Detailed simulation details found in [here](https://kittenk531.github.io/starcode-track/).
+
 ## Prequisites
 It is suggested that an isolated virtual environment is created under execution
 ```
@@ -19,13 +21,13 @@ Consistent unit set through out the calculations used is listed as below
 Remarks: display of mass for dark matter particle is in GeV for easy reference to literatures.
 
 ## How to run?
-Enter arguments of 
+Amend arguments of 
 * M: mass of massive star (solar mass Mo)
 * mx: mass of dark matter particle (GeV)
 * N: number of steps of evolution
 * h: timestep (yr)
 ```
-python3 orbit.py --M 1 --mx 0.1 --N 100 --h 100
+python3 orbit.py 
 ```
 
 ## Methods
@@ -36,3 +38,7 @@ Since the range of dark matter particle mass is of range 10^-3 to 10^19, the ord
 
 ## Possible issue
 1. Partition for the mass distribution (point source approximation of massive star may bug)
+2. Energy drift (sympletic): swifter
+3. Ambient dark matter capture change of mass: cross section * lifetime * pi R ^2 
+
+## TODO: Monte Carlo + logic
