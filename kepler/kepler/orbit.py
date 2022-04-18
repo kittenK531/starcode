@@ -1,15 +1,16 @@
 import numpy as np
-from archive import print_dist
-from display import plot, start_msg
-from functions_wrappers import mass_conversion
 from tqdm import tqdm
+
+from kepler.archive import print_dist
+from kepler.display import plot, start_msg
+from kepler.functions_wrappers import mass_conversion
 
 """ Constants initialization """
 
 M, mx = 1.0, mass_conversion(0.001, solar2GeV=False)
 G = 4 * np.pi ** 2  # AU^3 Mo^-1 yr^-2
 
-T, h = 1.0, 0.0000005  # yr
+T, h = 1.1, 0.00005  # yr
 
 N = int(T / h)
 
@@ -65,8 +66,12 @@ def evolve(M, r_0, v_0, alpha, T, h, check_radius=False):
 # bounds of the alpha
 # 100-300 km/s
 """ Execute """
-# alpha = 1.0
+
+"""
 r_0, v_0 = np.array([1, 0, 0]), np.array([0, 2 * np.pi, 0])
 for i in range(63):
     alpha = 0.1 + i * 0.02
     r = evolve(M, r_0, v_0, alpha, T, h)
+
+make_GIF()
+"""
