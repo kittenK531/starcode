@@ -7,7 +7,7 @@ from kepler.functions_wrappers import mass_conversion
 
 """ Constants initialization """
 
-M, mx = 1.0, mass_conversion(0.001, solar2GeV=False)
+M, mx = 1.0, mass_conversion(1000, solar2GeV=False)
 G = 4 * np.pi ** 2  # AU^3 Mo^-1 yr^-2
 
 T, h = 1.1, 0.00005  # yr
@@ -28,7 +28,7 @@ def g_acc_theo(m1, r_1, r_2):
     r_rel = r_1 - r_2
     rrel = np.linalg.norm(r_rel)
 
-    return (-1 * G * m1 / (rrel ** (3 / 2))) * r_rel
+    return (-1 * G * m1 / (rrel ** (3))) * r_rel
 
 
 def evolve(M, r_0, v_0, alpha, T, h, check_radius=False):

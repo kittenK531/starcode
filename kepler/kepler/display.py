@@ -38,9 +38,10 @@ def plot(r, alpha, is_3D=False):
         ax = fig.add_subplot(111)
         ax.plot(r[:, 0], r[:, 1])
         ax.set_aspect("equal")
-        plt.xlim(-2, 2)
-        plt.ylim(-2, 2)
+        plt.xlim(-10, 10)
+        plt.ylim(-10, 10)
 
+    plt.scatter(0,0, color="red", marker="o")
     plt.title(rf"$\alpha = ${alpha:.2}")
     plt.savefig(str(Path.joinpath(target, Path(f"alpha={alpha:.2}.png"))))
     plt.show(block=False)
