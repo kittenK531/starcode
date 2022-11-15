@@ -1,0 +1,27 @@
+             NPLMAX            1
+             NTPMAX            1
+                 T0    365.25999999999999     
+              TSTOP    365.25000000000000     
+                 DT   0.18262999999999999     
+              PL_IN  dump_pl2.bin
+              TP_IN  dump_tp2.bin
+            IN_TYPE  XDR8
+          ISTEP_OUT            1
+            BIN_OUT  bin.dat
+           OUT_TYPE  XDR4
+           OUT_FORM  EL
+           OUT_STAT  APPEND
+         ISTEP_DUMP            1
+                !J2 
+                !J4 
+          CHK_CLOSE  NO
+           CHK_RMIN   -1.0000000000000000     
+           CHK_RMAX    1000.0000000000000     
+          CHK_EJECT   -1.0000000000000000     
+           CHK_QMIN   -1.0000000000000000     
+    !CHK_QMIN_COORD 
+    !CHK_QMIN_RANGE 
+            ENC_OUT  enc.dat
+        EXTRA_FORCE  NO
+        BIG_DISCARD  YES
+      RHILL_PRESENT  NO
