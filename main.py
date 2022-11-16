@@ -1,9 +1,14 @@
-import numpy as np
+import subprocess
 
-from kepler import orbit as ko
+""" Calculating one orbit """
+""" Input:  parameter file 
+    Output: follow.out
+"""
 
-b = 2
+CWD = "swifter/swifter_test/"
 
-r_0, v_0 = np.array([1, -1 * b, 0]), np.array([0, 3* np.pi, 0])
-
-r = ko.evolve(1.0, r_0, v_0, 1.0, 10.0, 1/365)
+subprocess.call("rm bin.dat", shell=True, cwd=CWD+"test")
+# subprocess.call("ls", shell=True, cwd=CWD+"test")
+subprocess.call("./../bin/swifter_tu4", shell=True, cwd=CWD+"test")
+subprocess.call("./../bin/tool_follow", shell=True, cwd=CWD+"test")
+subprocess.call("ls *.out", shell=True, cwd=CWD+"test")

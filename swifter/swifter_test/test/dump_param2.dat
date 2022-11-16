@@ -1,17 +1,17 @@
              NPLMAX            1
              NTPMAX            1
-                 T0    365.25999999999999     
-              TSTOP    365.25000000000000     
-                 DT   0.18262999999999999     
+                 T0    36525.000000000000     
+              TSTOP    36525.000000000000     
+                 DT    3.6524999999999999     
               PL_IN  dump_pl2.bin
               TP_IN  dump_tp2.bin
             IN_TYPE  XDR8
-          ISTEP_OUT            1
+          ISTEP_OUT            5
             BIN_OUT  bin.dat
            OUT_TYPE  XDR4
-           OUT_FORM  EL
+           OUT_FORM  XV
            OUT_STAT  APPEND
-         ISTEP_DUMP            1
+         ISTEP_DUMP         1000
                 !J2 
                 !J4 
           CHK_CLOSE  NO
