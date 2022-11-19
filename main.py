@@ -22,13 +22,14 @@ def array2str(array):
 
         string += element + " "
 
-    return string
+    return string + "\n"
 
 
 def amend_infiles(
     name="param.in",
     tp_name="tp.in",
     velocity=np.array([0.0, 1.721420632e-2, 0.0]),
+    position=np.array([1.0, 0.0, 0.0]),
     CWD="recom/swifter",
     wdr="example",
 ):
@@ -50,7 +51,8 @@ def amend_infiles(
     )
 
     """ create new tp file for new vel """
-    tp_data = open(file_dir.joinpath(Path(tp_name)), "r+").readlines()[:-1]
+    tp_data = open(file_dir.joinpath(Path(tp_name)), "r+").readlines()[:-2]
+    tp_data += [array2str(position)]
     tp_data += [array2str(velocity)]
 
     tp_create = open(file_dir.joinpath(Path(tp_hash)), "w")
@@ -65,7 +67,7 @@ def get_helio_pos_vel(
     wdr="example",
     outfile_name="follow.out",
     infile_name="param.in",
-):  # , outfile_name, infile_name) #TODO hash files input + new function to sed input vel and pos
+):  # TODO hash files input + new function to sed input vel and pos
 
     particle_id, frequency = 6, 1
 
@@ -126,7 +128,9 @@ def get_helio_pos_vel(
     return x, y, z, vx, vy, vz
 
 
-param_name, tp_name = amend_infiles(velocity=np.array([0.0, 1.721420632e-2, 0]))
+param_name, tp_name = amend_infiles(
+    velocity=np.array([1.721420632e-2, 0.0, 0.0]), position=np.array([0.0, 1.0, 0.0])
+)  # POS
 
 x, y, z, vx, vy, vz = get_helio_pos_vel(infile_name=param_name)
 
