@@ -1,3 +1,4 @@
 recom/*
 swifter.egg-info/*
 *.png
+swifter/__pycache__/*

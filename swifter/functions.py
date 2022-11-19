@@ -129,12 +129,18 @@ def get_helio_pos_vel(
 
 def get_init_vel():
 
-    k = 8.617e-5 # eV/K
-    m = 0.1e3 # DM mass subGeV to super planck (p.7) [in MeV]
-    T = 2.726 # K
+    k = 8.617e-5  # eV/K
+    m = 0.1e3  # DM mass subGeV to super planck (p.7) [in MeV]
+    T = 2.726  # K
 
     norm_const = np.sqrt(k * T / m)
 
-    vel = np.array([np.sqrt(-2*np.log(np.random.rand()))*np.cos(2 * np.pi * np.random.rand()) for dim in range(3)])
+    vel = np.array(
+        [
+            np.sqrt(-2 * np.log(np.random.rand()))
+            * np.cos(2 * np.pi * np.random.rand())
+            for dim in range(3)
+        ]
+    )
 
     return vel
