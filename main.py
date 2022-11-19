@@ -5,9 +5,59 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def get_hash_code():
+def get_hash_name(name):
 
-    return str(np.abs(hash(".")))[:6]
+    hashh = str(np.abs(hash(".")))[:6]
+
+    return name.split(".")[0] + "1" + hashh + "." + name.split(".")[1]
+
+
+def array2str(array):
+
+    string = " "
+
+    for element in array:
+
+        element = str(element)
+
+        string += element + " "
+
+    return string
+
+
+def amend_infiles(
+    name="param.in",
+    tp_name="tp.in",
+    velocity=np.array([0.0, 1.721420632e-2, 0.0]),
+    CWD="recom/swifter",
+    wdr="example",
+):
+
+    cwd = Path(CWD)
+    file_dir = cwd.joinpath(Path(wdr))
+
+    infile_hash, tp_hash = get_hash_name(name), get_hash_name(tp_name)
+
+    """ remove hash from last run """  # Trick: appended '1' to each hash of 6 random char
+    subprocess.call(
+        f"rm {tp_name.split('.')[0]+'1'}* {name.split('.')[0]+'1'}*",
+        shell=True,
+        cwd=str(file_dir),
+    )
+    subprocess.call(f"cp {name} {infile_hash}", shell=True, cwd=str(file_dir))
+    subprocess.call(
+        f"sed -i 's/{tp_name}/{tp_hash}/g' {infile_hash}", shell=True, cwd=str(file_dir)
+    )
+
+    """ create new tp file for new vel """
+    tp_data = open(file_dir.joinpath(Path(tp_name)), "r+").readlines()[:-1]
+    tp_data += [array2str(velocity)]
+
+    tp_create = open(file_dir.joinpath(Path(tp_hash)), "w")
+    [tp_create.write(lines) for lines in tp_data]
+    tp_create.close()
+
+    return infile_hash, tp_hash
 
 
 def get_helio_pos_vel(
@@ -22,12 +72,9 @@ def get_helio_pos_vel(
     cwd = Path(CWD)
     file_dir = cwd.joinpath(Path(wdr))
 
-    outfile_hash = (
-        outfile_name.split(".")[0] + get_hash_code() + "." + outfile_name.split(".")[1]
-    )
+    outfile_hash = get_hash_name(outfile_name)
 
     subprocess.call("rm bin.dat *.out", shell=True, cwd=str(file_dir))
-    subprocess.call("ls -l *.out", shell=True, cwd=str(file_dir))
     subprocess.call(
         f"echo '{infile_name}' | ./../bin/swifter_tu4", shell=True, cwd=str(file_dir)
     )
@@ -79,7 +126,9 @@ def get_helio_pos_vel(
     return x, y, z, vx, vy, vz
 
 
-x, y, z, vx, vy, vz = get_helio_pos_vel()
+param_name, tp_name = amend_infiles(velocity=np.array([0.0, 1.721420632e-2, 0]))
+
+x, y, z, vx, vy, vz = get_helio_pos_vel(infile_name=param_name)
 
 fig1, ax = plt.subplots()
 ax.set_box_aspect(1)
