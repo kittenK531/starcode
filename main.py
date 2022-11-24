@@ -33,7 +33,4 @@ plt.xlabel(r"$x$ / $AU$")
 plt.ylabel(r"$y$ / $AU$")
 plt.legend()
 
-# ax.set_xlim(-1*np.max(x)-0.1,np.max(x)+0.1)
-# ax.set_ylim(-10,10)
-
 plt.savefig("test.png")
