@@ -2,3 +2,4 @@ recom/*
 swifter.egg-info/*
 *.png
 swifter/__pycache__/*
+swifter/__pycache__/functions.cpython-38.pyc

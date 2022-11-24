@@ -28,7 +28,7 @@ def amend_infiles(
     name="param.in",
     tp_name="tp.in",
     velocity=np.array([0.0, 1.721420632e-2, 0.0]),
-    position=np.array([1.0, 0.0, 0.0]),
+    position=np.array([0.0, 0.0, 0.0]),
     CWD="recom/swifter",
     wdr="example",
 ):
@@ -110,17 +110,10 @@ def get_helio_pos_vel(
 
             splitn = word.split("\n")
 
-            splitn = (
-                ["-1.0"] if ("*******" in splitn) else splitn
-            )  # fixing the display bug
-
             listlist += [splitn[0]] if (len(splitn) > 1) else splitn
 
-        try:
-            x[count], y[count], z[count] = listlist[2], listlist[3], listlist[4]
-            vx[count], vy[count], vz[count] = listlist[5], listlist[6], listlist[7]
-        except:
-            print(f"disregarded count {count}")
+        x[count], y[count], z[count] = listlist[2], listlist[3], listlist[4]
+        vx[count], vy[count], vz[count] = listlist[5], listlist[6], listlist[7]
 
         count += 1
 
