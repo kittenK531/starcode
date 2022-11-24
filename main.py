@@ -25,7 +25,7 @@ for i in range(3):
     initial_position = np.array([x[-1], y[-1], z[-1]])
     initial_velocity = np.array([vx[-1], vy[-1], vz[-1]])
 
-# get_init_vel()
+get_init_vel()
 
 ax.plot([0], [0], "ro")
 
