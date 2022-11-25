@@ -87,7 +87,7 @@ T0             0.0E0
 TSTOP          3.6525E2            ! simulation length is 1 yr
 DT             3.6525E0            ! stepsize is 0.0005 * 1 year ==> 1.8263E-1
 ...
-ISTEP_OUT      5                   ! output every [(num) * 2 - 1] DT
+ISTEP_OUT      5                   !
 ...
 OUT_TYPE       XDR4                ! 4-byte XDR formatted output
 OUT_FORM       XV                  ! osculating element output

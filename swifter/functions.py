@@ -1,7 +1,23 @@
 import subprocess
+from decimal import Decimal
 from pathlib import Path
 
 import numpy as np
+
+
+def circle(radius):
+
+    x = np.linspace(-1 * radius, radius, 200)
+    y = np.sqrt(radius**2 - x**2)
+
+    return x, y, -y
+
+
+def formatDTstring(dt_float):
+
+    dt_string = "%.4E" % Decimal(str(dt_float))
+
+    return dt_string
 
 
 def get_hash_name(name):
@@ -29,6 +45,7 @@ def amend_infiles(
     tp_name="tp.in",
     velocity=np.array([0.0, 1.721420632e-2, 0.0]),
     position=np.array([0.0, 0.0, 0.0]),
+    dt="3.6525E-4",
     CWD="recom/swifter",
     wdr="example",
 ):
@@ -48,6 +65,11 @@ def amend_infiles(
     subprocess.call(
         f"sed -i 's/{tp_name}/{tp_hash}/g' {infile_hash}", shell=True, cwd=str(file_dir)
     )
+    subprocess.call(
+        f"sed -i 's/.*DT.*/DT             {dt}/' {infile_hash}",
+        shell=True,
+        cwd=str(file_dir),
+    )
 
     """ create new tp file for new vel """
     tp_data = open(file_dir.joinpath(Path(tp_name)), "r+").readlines()[:-2]
@@ -66,7 +88,7 @@ def get_helio_pos_vel(
     wdr="example",
     outfile_name="follow.out",
     infile_name="param.in",
-):  # TODO hash files input + new function to sed input vel and pos
+):
 
     particle_id, frequency = 6, 1
 
@@ -87,7 +109,7 @@ def get_helio_pos_vel(
     subprocess.call(f"cp {outfile_name} {outfile_hash}", shell=True, cwd=str(file_dir))
 
     """ Getting the pos, vel via scanf """
-    f = open(file_dir.joinpath(Path(outfile_hash)), "r")  # TODO: hash file
+    f = open(file_dir.joinpath(Path(outfile_hash)), "r")
 
     num_lines = sum(1 for line in open(file_dir.joinpath(Path(outfile_hash)), "r"))
 
