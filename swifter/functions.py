@@ -143,12 +143,13 @@ def get_helio_pos_vel(
 
 
 def get_init_vel():
+    """desired velocity range = 10-1"""
 
-    k = 8.617e-5  # eV/K
-    m = 0.1e3  # DM mass subGeV to super planck (p.7) [in MeV]
-    T = 2.726  # K
+    k = 1  # eV/K
+    m = 0.4e3  # DM mass subGeV to super planck (p.7) [in MeV]
+    T = 2e0  # 5.726e0  # K
 
-    norm_const = np.sqrt(k * T / m)
+    norm_const = np.sqrt(T / m)
 
     vel = np.array(
         [
@@ -158,4 +159,57 @@ def get_init_vel():
         ]
     )
 
-    return vel
+    return norm_const * vel
+
+
+def enter_star(radius, r0):
+
+    idx = 0
+    enter_idx = 0
+    append_idx_list = []
+    radius_ref = radius
+
+    radius = []
+
+    for ri in radius_ref:
+
+        if ri < r0:
+
+            append_idx_list += [idx]
+
+        idx += 1
+
+    for i in append_idx_list:
+
+        radius += [radius_ref[int(i)]]
+
+    radius = np.array(radius)
+
+    if len(radius) != 0:
+
+        for i in range(len(radius_ref)):
+
+            if radius[0] == radius_ref[i]:
+
+                enter_idx = i
+
+        return True, i, radius[0]
+
+    else:
+
+        return False, 0, 0.0
+
+
+def first_enter(bool_array, count):
+
+    num_of_true = 0
+
+    bool_array = bool_array[:count]
+
+    for boolean in bool_array:
+
+        if boolean:
+
+            num_of_true += 1
+
+    return False if num_of_true > 0 else True
