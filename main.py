@@ -41,19 +41,24 @@ in_star, cant_escape = False, False
 pos = initial_position
 vel = test_vel
 
-total_scatter_times = 0
+total_drift_time = 0
+total_scatter_times, total_scatter_interval = 0, 0
 
 while (in_star and cant_escape) == False:
 
-    in_star, pos, vel = keplerian_loop(in_star, dt, pos, vel, r, ax)
+    in_star, pos, vel, drift_time = keplerian_loop(in_star, dt, pos, vel, r, ax)
 
-    pos, vel, in_star, cant_escape, times = scatter_loop(
+    pos, vel, in_star, cant_escape, times, scatter_interval = scatter_loop(
         in_star, cant_escape, pos, vel, m, ax, cs
     )
 
     total_scatter_times += times
+    total_drift_time += drift_time
+    total_scatter_interval += scatter_interval
 
-print(f"Scattered {total_scatter_times} times, captured: {in_star and cant_escape}")
+print(
+    f"Scattered {total_scatter_times} times, total time spent to be captured = {total_drift_time + total_scatter_interval} days"
+)
 print(box_muller_velocity)
 
 plt.legend()

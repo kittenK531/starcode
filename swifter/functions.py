@@ -263,7 +263,7 @@ def keplerian(N_iter, dt, initial_position, initial_velocity, r, ax):
 
     try:
         print(f"enter coord:{enter_coord}, enter vel: {enter_vel}")
-        return True, enter_coord, enter_vel
+        return True, enter_coord, enter_vel, (enter_idx + 1) * dt
 
     except:
         print("No enter")
@@ -271,6 +271,7 @@ def keplerian(N_iter, dt, initial_position, initial_velocity, r, ax):
             False,
             np.array([x[-1], y[-1], z[-1]]),
             np.array([vx[-1], vy[-1], vz[-1]]),
+            len(x) * dt,
         )
 
 
@@ -323,7 +324,9 @@ def scatter(ini_vel, ini_pos, m, ax, cs=1e-36, r0=0.00465):  # input cs in cm^2
         np.array([ini_pos[2], position[2]]),
     )
 
-    return position, velocity, E_f
+    avg_scatter_time = distance / v_f
+
+    return position, velocity, E_f, avg_scatter_time
 
 
 def capture(position, velocity, r0=0.00465):
@@ -361,18 +364,20 @@ def get_cs(fraction_of_r0, r0=0.00465):
 def scatter_loop(in_star, cant_escape, pos, vel, m, ax, cs):
 
     times = 0
+    scatter_t = 0
 
     while in_star and (cant_escape == False):
 
         print(f"{times}th - Scattering")
 
-        pos, vel, Ef = scatter(vel, pos, m, ax, cs)
+        pos, vel, Ef, avg_t = scatter(vel, pos, m, ax, cs)
 
         in_star, cant_escape = capture(pos, vel)
 
         times += 1
+        scatter_t += avg_t
 
-    return pos, vel, in_star, cant_escape, times
+    return pos, vel, in_star, cant_escape, times, scatter_t
 
 
 def get_test_vel(dv=0.001):
@@ -390,8 +395,12 @@ def get_test_vel(dv=0.001):
 
 def keplerian_loop(in_star, dt, pos, vel, r, ax):
 
+    drift_time = 0
+
     while in_star == False:
 
-        in_star, pos, vel = keplerian(1, dt, pos, vel, r, ax)
+        in_star, pos, vel, time = keplerian(1, dt, pos, vel, r, ax)
 
-    return in_star, pos, vel
+        drift_time += time
+
+    return in_star, pos, vel, drift_time
