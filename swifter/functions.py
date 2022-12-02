@@ -146,8 +146,8 @@ def get_init_vel():
     """desired velocity range = 10-1"""
 
     k = 1  # eV/K
-    m = 0.4e3  # DM mass subGeV to super planck (p.7) [in MeV]
-    T = 2e0  # 5.726e0  # K
+    m = 1000e3  # DM mass subGeV to super planck (p.7) [in MeV] e3M=G
+    T = 5e3  # 5.726e0  # K
 
     norm_const = np.sqrt(T / m)
 
@@ -193,7 +193,7 @@ def enter_star(radius, r0):
 
                 enter_idx = i
 
-        return True, i, radius[0]
+        return True, append_idx_list[0], radius_ref[append_idx_list[0]]
 
     else:
 
@@ -213,3 +213,10 @@ def first_enter(bool_array, count):
             num_of_true += 1
 
     return False if num_of_true > 0 else True
+
+
+""" Scattering 
+
+def get_final_vel(ini_vel):
+
+"""
