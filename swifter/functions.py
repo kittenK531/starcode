@@ -262,9 +262,11 @@ def keplerian(N_iter, dt, initial_position, initial_velocity, r, ax):
 
     try:
         print(f"enter coord:{enter_coord}, enter vel: {enter_vel}")
+        return True, enter_coord, enter_vel
 
     except:
         print("No enter")
+        return False, np.zeros(3), np.zeros(3)
 
 
 def plot_sun(r, ax):
@@ -276,8 +278,24 @@ def plot_sun(r, ax):
     ax.plot_surface(x, y, z, cmap=plt.cm.YlGnBu_r, antialiased=False, alpha=0.2)
 
 
-""" Scattering 
+""" Scattering """
 
-def get_final_vel(ini_vel):
 
-"""
+def get_final_vel(ini_vel, m, cs=1e-36):  # input cs in cm^2
+
+    m_bary = 907.84  # MeV
+
+    beta = 4 * m_bary * m / (m + m_bary) ** 2
+
+    AU = 6.684e-14
+
+    n = 1.41 / (1.673e-24 * AU**3)  # 1 / AU^3
+
+    mpf = 1 / (n * (cs * AU**2))
+
+    print(n, mpf)
+
+    E_0 = 0.5 * m * np.linalg.norm(ini_vel) ** 2
+    E_f = np.random.uniform(-1, 1) * beta
+
+    distance = np.random.uniform(0, 2) * mpf

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from swifter.functions import get_init_vel, keplerian, plot_sun
+from swifter.functions import get_final_vel, get_init_vel, keplerian, plot_sun
 
 """ Configure visualization """
 fig = plt.figure()
@@ -27,8 +27,11 @@ box_muller_velocity = get_init_vel(m)
 dt = 0.0001 * 3.6525
 N_iter = 3
 
-keplerian(N_iter, dt, initial_position, box_muller_velocity, r, ax)
+in_star, enter_pos, enter_vel = keplerian(
+    N_iter, dt, initial_position, box_muller_velocity, r, ax
+)
 
+get_final_vel(box_muller_velocity, m)
 
 plt.legend()
 plt.savefig("testing.png")
