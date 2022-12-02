@@ -2,12 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from swifter.functions import (
-    capture,
     get_cs,
     get_init_vel,
-    keplerian,
+    keplerian_loop,
     plot_sun,
-    scatter,
+    scatter_loop,
 )
 
 """ Configure visualization """
@@ -30,38 +29,31 @@ m = 1000e3  # DM mass subGeV to super planck (p.7) [in MeV] e3M=G
 cs = get_cs(0.5)
 
 initial_position = np.array(
-    [
-        np.random.uniform(r, 1.2 * r),
-        np.random.uniform(r, 1.2 * r),
-        np.random.uniform(r, 1.2 * r),
-    ]
+    [0.045, 0, 0]
 )  # circular_vel = 0.172, 0, 0 Scatter: np.array([-0.320, 0.173, 0])
 box_muller_velocity = get_init_vel(m)
+test_vel = 0.2 * np.array([-0.320, 0.173, 0])
 
 dt = 0.0001 * 3.6525
-N_iter = 3
+N_iter = 1
+in_star, cant_escape = False, False
 
-in_star, pos, vel = keplerian(N_iter, dt, initial_position, box_muller_velocity, r, ax)
+pos = initial_position
+vel = test_vel
 
-in_star, cant_escape = capture(pos, vel)
+total_scatter_times = 0
 
-times = 0
+while (in_star and cant_escape) == False:
 
-while in_star and (cant_escape == False):
+    in_star, pos, vel = keplerian_loop(in_star, dt, pos, vel, r, ax)
 
-    print(f"{times}th - Scattering")
+    pos, vel, in_star, cant_escape, times = scatter_loop(
+        in_star, cant_escape, pos, vel, m, ax, cs
+    )
 
-    pos, vel, Ef = scatter(vel, pos, m, ax, cs)  # simplify
+    total_scatter_times += times
 
-    in_star, cant_escape = capture(pos, vel)
-
-    times += 1
-
-if in_star == False:
-
-    keplerian(1, dt, pos, vel, r, ax)
-
-print(f"Scattered {times} times, captured: {in_star and cant_escape}")
+print(f"Scattered {total_scatter_times} times, captured: {in_star and cant_escape}")
 print(box_muller_velocity)
 
 plt.legend()

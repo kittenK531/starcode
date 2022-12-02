@@ -146,9 +146,10 @@ def get_helio_pos_vel(
 def get_init_vel(m):
     """desired velocity range = 10-1"""
 
-    T = 3e4  # 5e3  # K
-
+    T = 8.3390e4  # 5e3  # K
     norm_const = np.sqrt(T / m)
+
+    # norm_const = 500 * 6.68459e-9 / 1.15741e-5
 
     vel = np.array(
         [
@@ -266,7 +267,11 @@ def keplerian(N_iter, dt, initial_position, initial_velocity, r, ax):
 
     except:
         print("No enter")
-        return False, np.zeros(3), np.zeros(3)
+        return (
+            False,
+            np.array([x[-1], y[-1], z[-1]]),
+            np.array([vx[-1], vy[-1], vz[-1]]),
+        )
 
 
 def plot_sun(r, ax):
@@ -351,3 +356,42 @@ def get_cs(fraction_of_r0, r0=0.00465):
     mfp = fraction_of_r0 * r0
 
     return 1 / (mfp * n / AU**3) / AU**2
+
+
+def scatter_loop(in_star, cant_escape, pos, vel, m, ax, cs):
+
+    times = 0
+
+    while in_star and (cant_escape == False):
+
+        print(f"{times}th - Scattering")
+
+        pos, vel, Ef = scatter(vel, pos, m, ax, cs)
+
+        in_star, cant_escape = capture(pos, vel)
+
+        times += 1
+
+    return pos, vel, in_star, cant_escape, times
+
+
+def get_test_vel(dv=0.001):
+
+    m_s = 2.959139768995959e-04
+    r0 = 0.00465
+    v_esc = np.sqrt(2 * m_s / r0)
+
+    u, v = np.random.rand() * 2 * np.pi, np.random.rand() * 2 * np.pi
+
+    unit_vec = np.array([np.cos(u) * np.sin(v), np.sin(u) * np.sin(v), np.cos(v)])
+
+    return (v_esc + dv) * unit_vec
+
+
+def keplerian_loop(in_star, dt, pos, vel, r, ax):
+
+    while in_star == False:
+
+        in_star, pos, vel = keplerian(1, dt, pos, vel, r, ax)
+
+    return in_star, pos, vel
