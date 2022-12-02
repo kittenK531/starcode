@@ -39,7 +39,7 @@ N_iter = 1
 in_star, cant_escape = False, False
 
 pos = initial_position
-vel = test_vel
+vel = box_muller_velocity
 
 total_drift_time = 0
 total_scatter_times, total_scatter_interval = 0, 0
