@@ -281,7 +281,7 @@ def plot_sun(r, ax):
 """ Scattering """
 
 
-def get_final_vel(ini_vel, m, cs=1e-36):  # input cs in cm^2
+def scatter(ini_vel, ini_pos, m, ax, cs=1e-36, r0=0.00465):  # input cs in cm^2
 
     m_bary = 907.84  # MeV
 
@@ -289,13 +289,65 @@ def get_final_vel(ini_vel, m, cs=1e-36):  # input cs in cm^2
 
     AU = 6.684e-14
 
-    n = 1.41 / (1.673e-24 * AU**3)  # 1 / AU^3
+    m_avg_bary = 0.75 * 1.673e-24 + 0.25 * 6.6464e-24
 
-    mpf = 1 / (n * (cs * AU**2))
+    n = 1.41 / m_avg_bary  # 1 / AU^3
 
-    print(n, mpf)
+    mpf = 1 / (n * cs) * AU
 
     E_0 = 0.5 * m * np.linalg.norm(ini_vel) ** 2
-    E_f = np.random.uniform(-1, 1) * beta
+    dE_frac = np.random.uniform(-1, 1) * beta  # -1 to 1
+
+    E_f = E_0 + dE_frac * E_0
+
+    v_f = np.sqrt(2 * E_f / m)
+    u, v = np.random.rand() * 2 * np.pi, np.random.rand() * 2 * np.pi
+
+    unit_vec = np.array([np.cos(u) * np.sin(v), np.sin(u) * np.sin(v), np.cos(v)])
+
+    velocity = v_f * unit_vec
 
     distance = np.random.uniform(0, 2) * mpf
+    displacement = distance * unit_vec
+
+    position = ini_pos + displacement
+
+    ax.plot3D(
+        np.array([ini_pos[0], position[0]]),
+        np.array([ini_pos[1], position[1]]),
+        np.array([ini_pos[2], position[2]]),
+    )
+
+    return position, velocity, E_f
+
+
+def capture(position, velocity, r0=0.00465):
+
+    m_s = 2.959139768995959e-04
+    ri, vi = np.linalg.norm(position), np.linalg.norm(velocity)
+    v_esc = np.sqrt(2 * m_s / r0)
+
+    in_star = True if (ri < r0) else False
+
+    print(f"dis: {ri:.3f}, Inside star == {in_star}")
+
+    cant_escape = True if (vi < v_esc) else False
+
+    print(f"vel: {vi:.3f}, esc_v: {v_esc:.3f}, cant escape == {cant_escape}")
+
+    print(f"DM captured == {(in_star and cant_escape)}")
+
+    return in_star, cant_escape
+
+
+def get_cs(fraction_of_r0, r0=0.00465):
+
+    AU = 6.684e-14
+
+    m_avg_bary = 0.75 * 1.673e-24 + 0.25 * 6.6464e-24
+
+    n = 1.41 / m_avg_bary
+
+    mfp = fraction_of_r0 * r0
+
+    return 1 / (mfp * n / AU**3) / AU**2

@@ -1,7 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from swifter.functions import get_final_vel, get_init_vel, keplerian, plot_sun
+from swifter.functions import (
+    capture,
+    get_cs,
+    get_init_vel,
+    keplerian,
+    plot_sun,
+    scatter,
+)
 
 """ Configure visualization """
 fig = plt.figure()
@@ -20,6 +27,7 @@ plot_sun(r, ax)
 
 """ Keplerian oribitals """
 m = 1000e3  # DM mass subGeV to super planck (p.7) [in MeV] e3M=G
+cs = get_cs(1)
 
 initial_position = np.array([0.01, 0.0, 0.0])  # circular_vel = 0.172, 0, 0
 box_muller_velocity = get_init_vel(m)
@@ -27,11 +35,26 @@ box_muller_velocity = get_init_vel(m)
 dt = 0.0001 * 3.6525
 N_iter = 3
 
-in_star, enter_pos, enter_vel = keplerian(
-    N_iter, dt, initial_position, box_muller_velocity, r, ax
+in_star, pos, vel = keplerian(
+    N_iter, dt, initial_position, np.array([-0.320, 0.173, 0]), r, ax
 )
 
-get_final_vel(box_muller_velocity, m)
+in_star, cant_escape = capture(pos, vel)
+
+times = 0
+
+while in_star and (cant_escape == False):
+
+    print(f"{times}th - Scattering")
+
+    pos, vel, Ef = scatter(vel, pos, m, ax, cs)  # simplify
+
+    in_star, cant_escape = capture(pos, vel)
+
+    times += 1
+
+# if (in_star == False):
+
 
 plt.legend()
 plt.savefig("testing.png")
