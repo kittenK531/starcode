@@ -146,7 +146,7 @@ def get_helio_pos_vel(
 def get_init_vel(m):
     """desired velocity range = 10-1"""
 
-    T = 5e3  # 5.726e0  # K
+    T = 3e4  # 5e3  # K
 
     norm_const = np.sqrt(T / m)
 
