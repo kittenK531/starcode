@@ -143,11 +143,9 @@ def get_helio_pos_vel(
     return x, y, z, vx, vy, vz
 
 
-def get_init_vel():
+def get_init_vel(m):
     """desired velocity range = 10-1"""
 
-    k = 1  # eV/K
-    m = 1000e3  # DM mass subGeV to super planck (p.7) [in MeV] e3M=G
     T = 5e3  # 5.726e0  # K
 
     norm_const = np.sqrt(T / m)
